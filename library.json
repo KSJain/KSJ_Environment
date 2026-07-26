@@ -1,6 +1,6 @@
 {
     "name": "KSJ_Environment",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "description": "Reusable environmental sensor abstractions for Arduino-compatible embedded systems.",
     "keywords": [
         "environment",

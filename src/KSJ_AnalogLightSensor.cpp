@@ -9,9 +9,7 @@ AnalogLightSensor::AnalogLightSensor(
 )
     : _pin(pin),
       _config(config),
-      _refreshTimer(
-          config.refreshIntervalMs
-      ),
+      _refreshTimer(config.refreshIntervalMs),
       _available(false),
       _hasNewReading(false)
 {
@@ -19,19 +17,10 @@ AnalogLightSensor::AnalogLightSensor(
 
 bool AnalogLightSensor::begin()
 {
-    pinMode(
-        _pin,
-        INPUT
-    );
-
-    /*
-     * Classic ESP32 ADC resolution is normally
-     * 12 bits: values from 0 through 4095.
-     */
+    pinMode(_pin, INPUT);
     analogReadResolution(12);
 
-    _available =
-        calibrationValid();
+    _available = calibrationValid();
 
     if (_available)
     {
@@ -64,7 +53,7 @@ void AnalogLightSensor::readSensor(
 {
     const int rawRead =
         analogRead(_pin);
-    
+
     const bool rawValid =
         rawRead >= 0 &&
         rawRead <= 4095;
@@ -78,15 +67,9 @@ void AnalogLightSensor::readSensor(
     if (!rawValid)
     {
         _reading.rawValue = 0;
-
-        _reading.lightPercent =
-            NAN;
-
-        _reading.lightPercentValid =
-            false;
-
+        _reading.lightPercent = NAN;
+        _reading.lightPercentValid = false;
         _hasNewReading = true;
-
         return;
     }
 
@@ -117,31 +100,34 @@ float AnalogLightSensor::calculateLightPercent(
         return NAN;
     }
 
+    const float raw =
+        static_cast<float>(
+            rawValue
+        );
+
+    const float dark =
+        static_cast<float>(
+            _config.darkRawValue
+        );
+
+    const float bright =
+        static_cast<float>(
+            _config.brightRawValue
+        );
+
     float normalized = 0.0F;
 
     if (_config.higherRawIsBrighter)
     {
         normalized =
-            static_cast<float>(
-                rawValue -
-                _config.darkRawValue
-            ) /
-            static_cast<float>(
-                _config.brightRawValue -
-                _config.darkRawValue
-            );
+            (raw - dark) /
+            (bright - dark);
     }
     else
     {
         normalized =
-            static_cast<float>(
-                _config.darkRawValue -
-                rawValue
-            ) /
-            static_cast<float>(
-                _config.darkRawValue -
-                _config.brightRawValue
-            );
+            (dark - raw) /
+            (dark - bright);
     }
 
     normalized = constrain(
