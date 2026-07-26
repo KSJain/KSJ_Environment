@@ -64,7 +64,6 @@ void AnalogLightSensor::readSensor(
 {
     const int rawRead =
         analogRead(_pin);
-    Serial.println(rawRead);
     
     const bool rawValid =
         rawRead >= 0 &&
