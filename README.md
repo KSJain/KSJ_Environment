@@ -18,6 +18,7 @@ temperature, humidity and pressure rather than individual sensor drivers.
 - Validity checking
 - Automatic sensor detection
 - Common reading structure
+- analog light sensor LDR documented
 
 ---
 

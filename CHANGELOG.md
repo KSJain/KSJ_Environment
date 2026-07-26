@@ -8,3 +8,4 @@
 - Added independent sensor refresh intervals
 - Added validity flags and monotonic timestamps
 - Added `Basic_Environment` example
+- Added LDR support documented
